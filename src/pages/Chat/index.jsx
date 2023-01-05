@@ -3,6 +3,7 @@ import socketIO from "socket.io-client"
 import { Avatar } from "../../components/Avatar"
 import { Input } from "../../components/Input"
 import { Message } from "../../components/Message"
+import { useAuth } from "../../contexts/AuthContext"
 import { useRefreshToken } from "../../hooks/useRefreshToken"
 
 import "./index.scss"
@@ -12,25 +13,28 @@ import "./index.scss"
 export function Chat() {
   const [message, setMessage] = useState("")
   const [socket, setSocket] = useState(null)
-  const [token, setToken] = useState("")
   const { refresh } = useRefreshToken()
+  const { accessToken, setAccessToken } = useAuth()
 
   // function sendMessage() {
   //   socket.emit()
   // }
 
   useEffect(() => {
+    console.log("AccessToken in chat", accessToken)
     const newSocket = socketIO.connect("http://localhost:2000", {
       reconnection: false,
       auth: {
-        token: `Bearer ${token}`,
+        token: `Bearer ${accessToken}`,
       },
     })
 
     newSocket.on("connect_error", async (err) => {
       if (err.message === "Auth Error") {
-        const newAccessToken = await refresh()
-        setToken(newAccessToken)
+        const { data } = await refresh()
+        if (data) {
+          setAccessToken(data.accessToken)
+        }
       }
       console.log("Error", err.message)
     })
