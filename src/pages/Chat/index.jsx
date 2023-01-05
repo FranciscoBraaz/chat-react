@@ -1,12 +1,47 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import socketIO from "socket.io-client"
 import { Avatar } from "../../components/Avatar"
 import { Input } from "../../components/Input"
 import { Message } from "../../components/Message"
+import { useRefreshToken } from "../../hooks/useRefreshToken"
 
 import "./index.scss"
 
+// const socket = socketIO.connect("http://localhost:2000")
+
 export function Chat() {
   const [message, setMessage] = useState("")
+  const [socket, setSocket] = useState(null)
+  const [token, setToken] = useState("")
+  const { refresh } = useRefreshToken()
+
+  // function sendMessage() {
+  //   socket.emit()
+  // }
+
+  useEffect(() => {
+    const newSocket = socketIO.connect("http://localhost:2000", {
+      reconnection: false,
+      auth: {
+        token: `Bearer ${token}`,
+      },
+    })
+
+    newSocket.on("connect_error", async (err) => {
+      if (err.message === "Auth Error") {
+        const newAccessToken = await refresh()
+        setToken(newAccessToken)
+      }
+      console.log("Error", err.message)
+    })
+    setSocket(newSocket)
+
+    return () => {
+      newSocket.close()
+    }
+  }, [])
+
+  console.log(socket)
 
   return (
     <div className="chat">
