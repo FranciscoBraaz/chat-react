@@ -16,6 +16,7 @@ export function Chat() {
   const [usersConnected, setUsersConnected] = useState([])
   const { refresh } = useRefreshToken()
   const { accessToken, setAccessToken } = useAuth()
+  const [messages, setMessages] = useState([])
 
   // function sendMessage() {
   //   socket.emit()
@@ -47,9 +48,24 @@ export function Chat() {
     })
 
     newSocket.on("list-update", (data) => {
-      console.log("broadcast")
       if (data?.userList?.length > 0) {
         setUsersConnected(data.userList)
+      }
+
+      if (data?.joined) {
+        const newMessage = `entrou no chat`
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { user: data.joined, content: newMessage, type: "system" },
+        ])
+      }
+
+      if (data?.left) {
+        const newMessage = `saiu do chat`
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { user: data.left, content: newMessage, type: "system" },
+        ])
       }
     })
 
@@ -77,6 +93,13 @@ export function Chat() {
             message="Oi, como vai? dsjkskdj kdsljksl kdsjdsk jskljdslk jslksjlkdsj lksjsdlk sjklsdj lkdsjlskd jslkdsj lksjskd kdsjdsklsdjkldslk jsdlk sjlkds jlksdjs lk ksjdksd jkdsjkdsjk jdskdjskd skjdskdsk jkdjskdsj ksjskdjdsk jskjdskjsd kj sdk kdsjksdjskdj kdsjkdsj kjdskj
              dskjdskjdsk jsdksjdsdkj kdsjksd jskdjdsk jdskjdskjds kjdskjdsk jksdjkdsjkdsj ksjsdkj kjsdkdsjk"
           />
+          {messages.map((message) => (
+            <Message
+              userName={message.user}
+              message={message.content}
+              type="system"
+            />
+          ))}
         </div>
         <Input
           type="text"

@@ -16,3 +16,12 @@
 .message__info__user-name {
   font-weight: 600;
 }
+
+.message__system {
+  color: #96989d;
+  padding: 0px 20px;
+
+  & > span:first-child {
+    color: #fff;
+  }
+}
