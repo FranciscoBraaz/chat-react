@@ -28,6 +28,9 @@
 }
 
 .chat__users {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
   flex: 1;
   background-color: #2f3136;
   padding: 12px 24px;

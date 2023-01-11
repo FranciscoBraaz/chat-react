@@ -13,6 +13,7 @@ import "./index.scss"
 export function Chat() {
   const [message, setMessage] = useState("")
   const [socket, setSocket] = useState(null)
+  const [usersConnected, setUsersConnected] = useState([])
   const { refresh } = useRefreshToken()
   const { accessToken, setAccessToken } = useAuth()
 
@@ -21,7 +22,6 @@ export function Chat() {
   // }
 
   useEffect(() => {
-    console.log("AccessToken in chat", accessToken)
     const newSocket = socketIO.connect("http://localhost:2000", {
       reconnection: false,
       auth: {
@@ -40,20 +40,35 @@ export function Chat() {
     })
     setSocket(newSocket)
 
+    newSocket.on("user-list", (userList) => {
+      if (userList?.length > 0) {
+        setUsersConnected(userList)
+      }
+    })
+
+    newSocket.on("list-update", (data) => {
+      console.log("broadcast")
+      if (data?.userList?.length > 0) {
+        setUsersConnected(data.userList)
+      }
+    })
+
     return () => {
       newSocket.close()
     }
   }, [])
 
-  console.log(socket)
+  console.log(usersConnected)
 
   return (
     <div className="chat">
       <section className="chat__users">
-        <div className="chat__users__user">
-          <Avatar letter="F" />
-          <span>Francisco Braz</span>
-        </div>
+        {usersConnected.map((userConnected) => (
+          <div key={userConnected} className="chat__users__user">
+            <Avatar letter={userConnected[0].toUpperCase()} />
+            <span>{userConnected}</span>
+          </div>
+        ))}
       </section>
       <section className="chat__messages">
         <div className="chat__messages__area">
