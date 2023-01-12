@@ -8,7 +8,7 @@ export function Message({ userName, message, type = "user" }) {
     <div className="message">
       {type === "user" ? (
         <>
-          <Avatar letter={userName[0]} />
+          <Avatar letter={userName[0].toUpperCase()} />
           <div className="message__info">
             <p className="message__info__user-name">{userName}</p>
             <p className="message__info__content">{message}</p>

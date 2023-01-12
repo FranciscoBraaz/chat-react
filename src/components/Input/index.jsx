@@ -8,7 +8,14 @@ export function Input({
   required = false,
   placeholder,
   onChange,
+  onPressEnter,
 }) {
+  function handleKeyDown(target, key) {
+    if (key === "Enter") {
+      onPressEnter(target.value)
+    }
+  }
+
   return (
     <input
       className="input"
@@ -17,6 +24,11 @@ export function Input({
       required={required}
       placeholder={placeholder}
       onChange={({ target }) => onChange(target.value)}
+      onKeyDown={
+        onPressEnter
+          ? ({ target, key }) => handleKeyDown(target, key)
+          : undefined
+      }
     />
   )
 }

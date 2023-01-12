@@ -15,7 +15,7 @@ export function Chat() {
   const [socket, setSocket] = useState(null)
   const [usersConnected, setUsersConnected] = useState([])
   const { refresh } = useRefreshToken()
-  const { accessToken, setAccessToken } = useAuth()
+  const { user, accessToken, setAccessToken } = useAuth()
   const [messages, setMessages] = useState([])
 
   // function sendMessage() {
@@ -40,6 +40,11 @@ export function Chat() {
       console.log("Error", err.message)
     })
     setSocket(newSocket)
+
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { user: user.username, content: "Conectado", type: "system" },
+    ])
 
     newSocket.on("user-list", (userList) => {
       if (userList?.length > 0) {
@@ -69,12 +74,31 @@ export function Chat() {
       }
     })
 
+    newSocket.on("send-message", (msg) => {
+      if (msg.user !== user.username) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { ...msg, type: "user" },
+        ])
+      }
+    })
+
     return () => {
       newSocket.close()
+      setMessages([])
     }
+
+    /* eslint-disable-next-line*/
   }, [])
 
-  console.log(usersConnected)
+  function handleSendMessage(value) {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { user: user.username, content: value, type: "user" },
+    ])
+    socket.emit("send-message", value)
+    setMessage("")
+  }
 
   return (
     <div className="chat">
@@ -88,16 +112,12 @@ export function Chat() {
       </section>
       <section className="chat__messages">
         <div className="chat__messages__area">
-          <Message
-            userName="Francisco Braz"
-            message="Oi, como vai? dsjkskdj kdsljksl kdsjdsk jskljdslk jslksjlkdsj lksjsdlk sjklsdj lkdsjlskd jslkdsj lksjskd kdsjdsklsdjkldslk jsdlk sjlkds jlksdjs lk ksjdksd jkdsjkdsjk jdskdjskd skjdskdsk jkdjskdsj ksjskdjdsk jskjdskjsd kj sdk kdsjksdjskdj kdsjkdsj kjdskj
-             dskjdskjdsk jsdksjdsdkj kdsjksd jskdjdsk jdskjdskjds kjdskjdsk jksdjkdsjkdsj ksjsdkj kjsdkdsjk"
-          />
-          {messages.map((message) => (
+          {messages.map((message, index) => (
             <Message
+              key={index}
               userName={message.user}
               message={message.content}
-              type="system"
+              type={message.type ?? null}
             />
           ))}
         </div>
@@ -106,6 +126,7 @@ export function Chat() {
           value={message}
           placeholder="Digite sua mensagem"
           onChange={(value) => setMessage(value)}
+          onPressEnter={handleSendMessage}
         />
       </section>
     </div>
