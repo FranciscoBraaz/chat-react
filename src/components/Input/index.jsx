@@ -7,6 +7,8 @@ export function Input({
   value,
   required = false,
   placeholder,
+  backgroundColor = "#fff",
+  withShadow = false,
   onChange,
   onPressEnter,
 }) {
@@ -16,13 +18,22 @@ export function Input({
     }
   }
 
+  function returnClassName() {
+    let className = "input"
+
+    if (withShadow) className += " input--shadow"
+
+    return className
+  }
+
   return (
     <input
-      className="input"
+      className={returnClassName()}
       type={type}
       value={value}
       required={required}
       placeholder={placeholder}
+      style={{ backgroundColor }}
       onChange={({ target }) => onChange(target.value)}
       onKeyDown={
         onPressEnter

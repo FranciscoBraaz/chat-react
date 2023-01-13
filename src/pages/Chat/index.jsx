@@ -1,3 +1,4 @@
+import { Power } from "feather-icons-react/build/IconComponents"
 import React, { useEffect, useState } from "react"
 import socketIO from "socket.io-client"
 import { Avatar } from "../../components/Avatar"
@@ -74,7 +75,7 @@ export function Chat() {
       }
     })
 
-    newSocket.on("send-message", (msg) => {
+    newSocket.on("show-message", (msg) => {
       if (msg.user !== user.username) {
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -92,23 +93,71 @@ export function Chat() {
   }, [])
 
   function handleSendMessage(value) {
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { user: user.username, content: value, type: "user" },
-    ])
-    socket.emit("send-message", value)
-    setMessage("")
+    const content = value.trim()
+    if (content) {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { user: user.username, content: content, type: "user" },
+      ])
+      socket.emit("send-message", content)
+      setMessage("")
+    }
   }
+
+  function defineMessageOrigin(message) {
+    let origin = ""
+
+    if (message.type === "system") return
+
+    if (message.user === user.username) {
+      origin = "self"
+    } else {
+      origin = "other"
+    }
+
+    return origin
+  }
+
+  // let usersConnected2 = [
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  //   "francisco",
+  // ]
 
   return (
     <div className="chat">
-      <section className="chat__users">
-        {usersConnected.map((userConnected) => (
-          <div key={userConnected} className="chat__users__user">
-            <Avatar letter={userConnected[0].toUpperCase()} />
-            <span>{userConnected}</span>
-          </div>
-        ))}
+      <section className="chat__sidebar">
+        <Input placeholder="Pesquisar usuários" backgroundColor="#f9fbfc" />
+        <div className="chat__users">
+          {usersConnected.map((userConnected) => (
+            <div key={userConnected} className="chat__users__user">
+              <Avatar
+                userName={userConnected}
+                letter={userConnected[0].toUpperCase()}
+              />
+              <span>{userConnected}</span>
+            </div>
+          ))}
+        </div>
+        <footer className="chat__sidebar__footer">
+          <div className="chat__users__separator" />
+          <button className="chat__users__logout">
+            <Power />
+            <span>Logout</span>
+          </button>
+        </footer>
       </section>
       <section className="chat__messages">
         <div className="chat__messages__area">
@@ -118,6 +167,7 @@ export function Chat() {
               userName={message.user}
               message={message.content}
               type={message.type ?? null}
+              origin={defineMessageOrigin(message)}
             />
           ))}
         </div>
@@ -125,6 +175,7 @@ export function Chat() {
           type="text"
           value={message}
           placeholder="Digite sua mensagem"
+          withShadow
           onChange={(value) => setMessage(value)}
           onPressEnter={handleSendMessage}
         />

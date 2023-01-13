@@ -1,15 +1,21 @@
 .input {
-  background-color: #40444b;
+  background-color: #fff;
   padding: 8px 12px;
   border-radius: 8px;
   outline: 0;
-  border: none;
+  // border: none;
   width: 100%;
-  color: white;
+  color: #3b3b3b;
   font-size: 16px;
   height: 48px;
+  border: 1px solid #e6e9ea;
 
-  ::placeholder {
-    color: #96938c;
+  &::placeholder {
+    color: #b4beca;
+  }
+
+  &--shadow {
+    box-shadow: 10px 10px 25px rgba(112, 124, 151, 0.05),
+      15px 15px 35px rgba(112, 124, 151, 0.05);
   }
 }

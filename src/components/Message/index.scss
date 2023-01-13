@@ -1,6 +1,34 @@
 .message {
   display: flex;
   gap: 10px;
+  width: fit-content;
+  max-width: 80%;
+
+  &--self {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+}
+
+.message__container {
+  background-color: #157cff;
+  width: fit-content;
+  padding: 8px 16px;
+  border-radius: 8px;
+
+  &--self {
+    background-color: #fff;
+    box-shadow: 10px 10px 25px rgba(112, 124, 151, 0.05),
+      15px 15px 35px rgba(112, 124, 151, 0.05);
+
+    & .message__info__user-name {
+      color: #3b3b3b;
+    }
+
+    & .message__info__content {
+      color: #707c97;
+    }
+  }
 }
 
 .message__info {
@@ -21,6 +49,6 @@
   color: #96989d;
 
   & > span:first-child {
-    color: #fff;
+    color: #3b3b3b;
   }
 }
