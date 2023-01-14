@@ -1,21 +1,52 @@
-.input {
+.wrapper-input {
+  display: flex;
+  gap: 16px;
   background-color: #fff;
   padding: 8px 12px;
   border-radius: 8px;
-  outline: 0;
-  // border: none;
   width: 100%;
   color: #3b3b3b;
-  font-size: 16px;
   height: 48px;
   border: 1px solid #e6e9ea;
-
-  &::placeholder {
-    color: #b4beca;
-  }
 
   &--shadow {
     box-shadow: 10px 10px 25px rgba(112, 124, 151, 0.05),
       15px 15px 35px rgba(112, 124, 151, 0.05);
+  }
+
+  & > svg {
+    color: #b4beca;
+  }
+}
+
+.input {
+  background-color: #fff;
+  outline: 0;
+  border: none;
+  width: 100%;
+  color: #3b3b3b;
+  font-size: 16px;
+
+  &::placeholder {
+    color: #b4beca;
+  }
+}
+
+.wrapper-input__icon-container {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.5s;
+
+  &:active {
+    opacity: 0.6;
+  }
+
+  & > svg {
+    color: #fff;
   }
 }

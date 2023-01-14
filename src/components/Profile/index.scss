@@ -1,0 +1,39 @@
+.profile {
+  display: flex;
+  gap: 12px;
+}
+
+.profile__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile__info__name {
+  color: #3b3b3b;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.profile__info__username {
+  color: #6f7094;
+  font-size: 14px;
+}
+
+.profile__status {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  & > span {
+    color: #6f7094;
+    font-size: 12px;
+  }
+}
+
+.profile__indicator-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #1cc4ab;
+}

@@ -34,6 +34,8 @@ export function AuthProvider({ children }) {
     } else {
       firstRender.current = false
     }
+
+    /* eslint-disable-next-line*/
   }, [])
 
   async function handleLogin(email, password) {
@@ -58,6 +60,17 @@ export function AuthProvider({ children }) {
     return { result, error }
   }
 
+  async function handleLogout() {
+    try {
+      await api.get("/logout")
+      setUser(null)
+      setAccessToken(null)
+      setIsAuthenticated(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -68,6 +81,7 @@ export function AuthProvider({ children }) {
         setAccessToken,
         setIsAuthenticated,
         handleLogin,
+        handleLogout,
       }}
     >
       {children}

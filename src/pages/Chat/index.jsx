@@ -1,27 +1,22 @@
-import { Power } from "feather-icons-react/build/IconComponents"
 import React, { useEffect, useState } from "react"
 import socketIO from "socket.io-client"
-import { Avatar } from "../../components/Avatar"
+
+import { useRefreshToken } from "../../hooks/useRefreshToken"
+import { useAuth } from "../../contexts/AuthContext"
+
+import { Sidebar } from "../../components/Sidebar"
 import { Input } from "../../components/Input"
 import { Message } from "../../components/Message"
-import { useAuth } from "../../contexts/AuthContext"
-import { useRefreshToken } from "../../hooks/useRefreshToken"
 
 import "./index.scss"
-
-// const socket = socketIO.connect("http://localhost:2000")
 
 export function Chat() {
   const [message, setMessage] = useState("")
   const [socket, setSocket] = useState(null)
   const [usersConnected, setUsersConnected] = useState([])
   const { refresh } = useRefreshToken()
-  const { user, accessToken, setAccessToken } = useAuth()
+  const { user, accessToken, setAccessToken, handleLogout } = useAuth()
   const [messages, setMessages] = useState([])
-
-  // function sendMessage() {
-  //   socket.emit()
-  // }
 
   useEffect(() => {
     const newSocket = socketIO.connect("http://localhost:2000", {
@@ -44,7 +39,7 @@ export function Chat() {
 
     setMessages((prevMessages) => [
       ...prevMessages,
-      { user: user.username, content: "Conectado", type: "system" },
+      { user: "", content: "Conexão estabelecida", type: "system" },
     ])
 
     newSocket.on("user-list", (userList) => {
@@ -119,48 +114,32 @@ export function Chat() {
   }
 
   // let usersConnected2 = [
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
-  //   "francisco",
+  //   "francisco2",
+  //   "francisco3",
+  //   "francisco4",
+  //   "francisco5",
+  //   "francisco6",
+  //   "francisco7",
+  //   "francisco8",
+  //   "francisco9",
+  //   "francisco10",
+  //   "francisco11",
+  //   "francisco12",
+  //   "francisco13",
+  //   "francisco14",
+  //   "francisco15",
+  //   "francisco16",
   // ]
 
   return (
     <div className="chat">
-      <section className="chat__sidebar">
-        <Input placeholder="Pesquisar usuários" backgroundColor="#f9fbfc" />
-        <div className="chat__users">
-          {usersConnected.map((userConnected) => (
-            <div key={userConnected} className="chat__users__user">
-              <Avatar
-                userName={userConnected}
-                letter={userConnected[0].toUpperCase()}
-              />
-              <span>{userConnected}</span>
-            </div>
-          ))}
-        </div>
-        <footer className="chat__sidebar__footer">
-          <div className="chat__users__separator" />
-          <button className="chat__users__logout">
-            <Power />
-            <span>Logout</span>
-          </button>
-        </footer>
-      </section>
+      <Sidebar usersConnected={usersConnected} handleLogout={handleLogout} />
       <section className="chat__messages">
         <div className="chat__messages__area">
+          <div className="chat__messages__area__header">
+            <p>Divirta-se conversando com seus amigos</p>
+            <div />
+          </div>
           {messages.map((message, index) => (
             <Message
               key={index}
@@ -178,6 +157,9 @@ export function Chat() {
           withShadow
           onChange={(value) => setMessage(value)}
           onPressEnter={handleSendMessage}
+          rightIcon="Send"
+          iconBackground="#157cff"
+          sizeIcon={18}
         />
       </section>
     </div>
