@@ -50,7 +50,11 @@ export function Login() {
             />
             {errorSubmit && <p>{errorSubmit}</p>}
             <Button type="submit" text="Entrar" isLoading={isLoading} />
-            <button type="button" className="login__link">
+            <button
+              type="button"
+              className="login__link"
+              onClick={() => navigate("/register")}
+            >
               Ainda não tem conta? Cadastre-se
             </button>
           </div>

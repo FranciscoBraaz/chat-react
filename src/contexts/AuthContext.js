@@ -53,14 +53,28 @@ export function AuthProvider({ children }) {
       setIsAuthenticated(true)
       result = response
     } catch (err) {
-      console.log(err.response)
       if (err?.response?.data?.message) {
         error = err?.response?.data?.message
       } else {
         error = "Erro no servidor"
       }
+    }
 
-      console.log(err)
+    return { result, error }
+  }
+
+  async function handleRegister(name, username, email, password) {
+    let error = null
+    let result = null
+
+    try {
+      await api.post("/register", { name, username, email, password })
+    } catch (err) {
+      if (err?.response?.data?.message) {
+        error = err?.response?.data?.message
+      } else {
+        error = "Erro no servidor"
+      }
     }
 
     return { result, error }
@@ -68,7 +82,9 @@ export function AuthProvider({ children }) {
 
   async function handleLogout() {
     try {
-      await api.get("/logout")
+      await api.get("/logout", {
+        withCredentials: true,
+      })
       setUser(null)
       setAccessToken(null)
       setIsAuthenticated(false)
@@ -87,6 +103,7 @@ export function AuthProvider({ children }) {
         setAccessToken,
         setIsAuthenticated,
         handleLogin,
+        handleRegister,
         handleLogout,
       }}
     >

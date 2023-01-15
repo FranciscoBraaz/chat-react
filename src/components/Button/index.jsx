@@ -6,7 +6,7 @@ import "./index.scss"
 const override = {
   display: "block",
   margin: "0 auto",
-  borderColor: "#ff",
+  borderColor: "#fff",
 }
 
 export function Button({
