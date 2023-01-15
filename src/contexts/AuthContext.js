@@ -53,7 +53,13 @@ export function AuthProvider({ children }) {
       setIsAuthenticated(true)
       result = response
     } catch (err) {
-      error = err
+      console.log(err.response)
+      if (err?.response?.data?.message) {
+        error = err?.response?.data?.message
+      } else {
+        error = "Erro no servidor"
+      }
+
       console.log(err)
     }
 

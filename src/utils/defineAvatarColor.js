@@ -3,7 +3,6 @@ const sRange = [50, 75]
 const lRange = [25, 60]
 
 export const defineAvatarColor = (name) => {
-  console.log("n", name)
   const hsl = generateHSL(name)
   return `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`
 }

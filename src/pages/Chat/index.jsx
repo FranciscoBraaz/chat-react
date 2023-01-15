@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import socketIO from "socket.io-client"
+import { AlignJustify } from "react-feather"
 
 import { useRefreshToken } from "../../hooks/useRefreshToken"
 import { useAuth } from "../../contexts/AuthContext"
@@ -7,10 +8,9 @@ import { useAuth } from "../../contexts/AuthContext"
 import { Sidebar } from "../../components/Sidebar"
 import { Input } from "../../components/Input"
 import { Message } from "../../components/Message"
+import { Avatar } from "../../components/Avatar"
 
 import "./index.scss"
-import { AlignJustify } from "react-feather"
-import { Avatar } from "../../components/Avatar"
 
 export function Chat() {
   const { refresh } = useRefreshToken()
@@ -21,6 +21,24 @@ export function Chat() {
   const [usersConnected, setUsersConnected] = useState([])
   const [messages, setMessages] = useState([])
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false)
+  const [previousScrollHeight, setPreviousScrollHeight] = useState(0)
+
+  const chatAreaRef = useRef()
+
+  useEffect(() => {
+    if (chatAreaRef.current) {
+      const chatArea = chatAreaRef.current
+      const scrollHeight = chatArea.scrollHeight
+      const chatAreaHeight = chatArea.getBoundingClientRect().height
+
+      if (previousScrollHeight - chatAreaHeight === chatArea.scrollTop) {
+        chatArea.scrollTop = scrollHeight
+      }
+      setPreviousScrollHeight(scrollHeight)
+    }
+
+    /* eslint-disable-next-line */
+  }, [messages])
 
   useEffect(() => {
     const newSocket = socketIO.connect("http://localhost:2000", {
@@ -91,8 +109,8 @@ export function Chat() {
     /* eslint-disable-next-line*/
   }, [])
 
-  function handleSendMessage(value) {
-    const content = value.trim()
+  function handleSendMessage() {
+    const content = message.trim()
     if (content) {
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -117,24 +135,6 @@ export function Chat() {
     return origin
   }
 
-  // let usersConnected2 = [
-  //   "francisco2",
-  //   "francisco3",
-  //   "francisco4",
-  //   "francisco5",
-  //   "francisco6",
-  //   "francisco7",
-  //   "francisco8",
-  //   "francisco9",
-  //   "francisco10",
-  //   "francisco11",
-  //   "francisco12",
-  //   "francisco13",
-  //   "francisco14",
-  //   "francisco15",
-  //   "francisco16",
-  // ]
-
   return (
     <div className="chat">
       <Sidebar
@@ -153,7 +153,7 @@ export function Chat() {
         />
       </header>
       <section className="chat__messages">
-        <div className="chat__messages__area">
+        <div className="chat__messages__area" ref={chatAreaRef}>
           <div className="chat__messages__area__header">
             <p>Divirta-se conversando com seus amigos</p>
             <div />
@@ -175,6 +175,7 @@ export function Chat() {
           withShadow
           onChange={(value) => setMessage(value)}
           onPressEnter={handleSendMessage}
+          handleClick={handleSendMessage}
           rightIcon="Send"
           iconBackground="#157cff"
           sizeIcon={18}

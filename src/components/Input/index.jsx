@@ -16,6 +16,8 @@ export function Input({
   sizeIcon = 24,
   onChange,
   onPressEnter,
+  onFocus,
+  handleClick,
 }) {
   function handleKeyDown(target, key) {
     if (key === "Enter") {
@@ -38,6 +40,7 @@ export function Input({
         <div
           className="wrapper-input__icon-container"
           style={{ backgroundColor: iconBackground }}
+          onClick={handleClick}
         >
           <Icon size={sizeIcon} style={{ cursor: "pointer" }} />
         </div>
@@ -57,6 +60,7 @@ export function Input({
         placeholder={placeholder}
         style={{ backgroundColor }}
         onChange={({ target }) => onChange(target.value)}
+        onFocus={onFocus}
         onKeyDown={
           onPressEnter
             ? ({ target, key }) => handleKeyDown(target, key)

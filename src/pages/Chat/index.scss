@@ -10,7 +10,7 @@
   background-color: #f9fbfc;
   display: flex;
   flex-direction: column;
-  padding: 0px 20px;
+  padding: 0px 20px 16px;
 
   & > input {
     margin-top: auto;
@@ -37,7 +37,7 @@
 .chat__messages__area {
   padding: 24px 12px;
   height: 100%;
-  max-height: calc(100vh - 68px);
+  max-height: calc(100vh - 132px);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -83,5 +83,13 @@
 
   .chat__header {
     display: none;
+  }
+
+  .chat__messages {
+    padding: 0px 20px;
+  }
+
+  .chat__messages__area {
+    max-height: calc(100vh - 68px);
   }
 }

@@ -1,9 +1,14 @@
 .button {
-  background-color: #b9bbbe;
+  background-color: #157cff;
   border: none;
-  color: #36393f;
+  color: #fff;
   height: 36px;
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
+
+  &--disabled {
+    opacity: 0.7;
+    pointer-events: none;
+  }
 }
