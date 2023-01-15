@@ -1,5 +1,5 @@
 import React from "react"
-import { Power } from "react-feather"
+import { Power, X } from "react-feather"
 import { useAuth } from "../../contexts/AuthContext"
 import { Avatar } from "../Avatar"
 import { Badge } from "../Badge"
@@ -8,12 +8,29 @@ import { Profile } from "../Profile"
 
 import "./index.scss"
 
-export function Sidebar({ usersConnected, handleLogout }) {
+export function Sidebar({
+  usersConnected,
+  isOpen = true,
+  handleLogout,
+  handleClose,
+}) {
   const { user } = useAuth()
 
+  function returnClassName() {
+    let className = "chat__sidebar"
+
+    if (isOpen) className += " chat__sidebar--open fade-in"
+    else className += " fade-out"
+
+    return className
+  }
+
   return (
-    <section className="chat__sidebar">
+    <section className={returnClassName()}>
       <header className="chat__sidebar__header">
+        <button onClick={handleClose}>
+          <X />
+        </button>
         <Profile />
         <div className="chat__users__separator" />
       </header>

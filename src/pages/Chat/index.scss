@@ -1,5 +1,6 @@
 .chat {
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100vh;
 }
@@ -14,6 +15,22 @@
   & > input {
     margin-top: auto;
     margin-bottom: 20px;
+  }
+}
+
+.chat__header {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background-color: #fff;
+
+  & > button {
+    background-color: transparent;
+    border: none;
+
+    & > svg {
+      color: #3b3b3b;
+    }
   }
 }
 
@@ -56,5 +73,15 @@
     height: 1px;
     width: 100%;
     background-color: #e6e9ea;
+  }
+}
+
+@media (min-width: 960px) {
+  .chat {
+    flex-direction: row;
+  }
+
+  .chat__header {
+    display: none;
   }
 }

@@ -1,24 +1,43 @@
 .chat__sidebar {
+  visibility: hidden;
   display: flex;
+  position: absolute;
   flex-direction: column;
   width: 100%;
   max-width: 280px;
   height: 100vh;
   padding: 24px;
   gap: 24px;
+  background-color: #fff;
+
+  &--open {
+    visibility: visible;
+    z-index: 2;
+  }
 }
 
 .chat__sidebar__header {
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  & > button {
+    background-color: transparent;
+    display: flex;
+    border: none;
+    width: fit-content;
+    margin-left: auto;
+
+    & > svg {
+      color: #3b3b3b;
+    }
+  }
 }
 
 .chat__users {
   display: flex;
   gap: 16px;
   flex-direction: column;
-  background-color: #fff;
   align-items: flex-start;
   height: 100%;
   max-height: 80%;
@@ -91,5 +110,32 @@
 
   &:hover {
     cursor: pointer;
+  }
+}
+
+.fade-in {
+  margin-left: 0px;
+  opacity: 1;
+  transition: all 0.3s;
+}
+
+.fade-out {
+  margin-left: -20px;
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+@media (min-width: 960px) {
+  .chat__sidebar {
+    visibility: visible;
+    position: relative;
+    margin-left: 0px;
+    opacity: 1;
+  }
+
+  .chat__sidebar__header {
+    & > button {
+      display: none;
+    }
   }
 }

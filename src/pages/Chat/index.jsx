@@ -9,14 +9,18 @@ import { Input } from "../../components/Input"
 import { Message } from "../../components/Message"
 
 import "./index.scss"
+import { AlignJustify } from "react-feather"
+import { Avatar } from "../../components/Avatar"
 
 export function Chat() {
+  const { refresh } = useRefreshToken()
+  const { user, accessToken, setAccessToken, handleLogout } = useAuth()
+
   const [message, setMessage] = useState("")
   const [socket, setSocket] = useState(null)
   const [usersConnected, setUsersConnected] = useState([])
-  const { refresh } = useRefreshToken()
-  const { user, accessToken, setAccessToken, handleLogout } = useAuth()
   const [messages, setMessages] = useState([])
+  const [sidebarIsOpen, setSidebarIsOpen] = useState(false)
 
   useEffect(() => {
     const newSocket = socketIO.connect("http://localhost:2000", {
@@ -133,7 +137,21 @@ export function Chat() {
 
   return (
     <div className="chat">
-      <Sidebar usersConnected={usersConnected} handleLogout={handleLogout} />
+      <Sidebar
+        usersConnected={usersConnected}
+        isOpen={sidebarIsOpen}
+        handleLogout={handleLogout}
+        handleClose={() => setSidebarIsOpen(false)}
+      />
+      <header className="chat__header">
+        <button onClick={() => setSidebarIsOpen(true)}>
+          <AlignJustify size={28} />
+        </button>
+        <Avatar
+          userName={user.username}
+          letter={user.username[0].toUpperCase()}
+        />
+      </header>
       <section className="chat__messages">
         <div className="chat__messages__area">
           <div className="chat__messages__area__header">
