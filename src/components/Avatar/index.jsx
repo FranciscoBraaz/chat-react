@@ -3,7 +3,7 @@ import { defineAvatarColor } from "../../utils/defineAvatarColor"
 
 import "./index.scss"
 
-export function Avatar({ userName, letter, size = 40 }) {
+export function Avatar({ userName, letter, src, size = 40 }) {
   return (
     <div
       className="avatar"
@@ -14,9 +14,10 @@ export function Avatar({ userName, letter, size = 40 }) {
         height: size,
         borderRadius: size / 2,
         backgroundColor: defineAvatarColor(userName),
+        backgroundImage: `url(${src})`,
       }}
     >
-      {letter}
+      {src ? null : letter}
     </div>
   )
 }

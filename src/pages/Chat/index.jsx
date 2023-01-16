@@ -1,14 +1,19 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import socketIO from "socket.io-client"
 import { AlignJustify } from "react-feather"
 
 import { useRefreshToken } from "../../hooks/useRefreshToken"
 import { useAuth } from "../../contexts/AuthContext"
+import { messagesPredefine } from "../../utils/messagesPredefine"
 
 import { Sidebar } from "../../components/Sidebar"
 import { Input } from "../../components/Input"
 import { Message } from "../../components/Message"
 import { Avatar } from "../../components/Avatar"
+
+import audioSrc from "../../assets/nothing.mp3"
+import francisAvatar from "../../assets/francis.jpeg"
+import nadineAvatar from "../../assets/nadine.jpeg"
 
 import "./index.scss"
 
@@ -22,6 +27,10 @@ export function Chat() {
   const [messages, setMessages] = useState([])
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false)
   const [previousScrollHeight, setPreviousScrollHeight] = useState(0)
+  const [messagesRendered, setMessagesRendered] = useState(0)
+  const [isFinish, setIsFinish] = useState(false)
+  const [loadingMyMessage, setLoadingMyMessage] = useState(false)
+  const [loadingOtherMessage, setLoadingOtherMessage] = useState(false)
 
   const chatAreaRef = useRef()
 
@@ -39,6 +48,41 @@ export function Chat() {
 
     /* eslint-disable-next-line */
   }, [messages])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMessagesRendered((prev) => prev + 1)
+    }, 2000)
+
+    if (isFinish) {
+      clearInterval(interval)
+    }
+
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    setLoadingMyMessage(false)
+    setLoadingOtherMessage(false)
+    if (messagesRendered >= 1 && messagesRendered <= messagesPredefine.length) {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        messagesPredefine[messagesRendered - 1],
+      ])
+      if (messagesRendered < messagesPredefine.length) {
+        const nextMessageUser = messagesPredefine[messagesRendered].user
+        if (nextMessageUser === user.username) {
+          setLoadingMyMessage(true)
+        } else {
+          setLoadingOtherMessage(true)
+        }
+      }
+    }
+
+    if (messagesRendered > messagesPredefine.length) {
+      setIsFinish(true)
+    }
+  }, [messagesRendered])
 
   useEffect(() => {
     const newSocket = socketIO.connect("http://localhost:2000", {
@@ -59,6 +103,7 @@ export function Chat() {
     })
     setSocket(newSocket)
 
+    /*
     setMessages((prevMessages) => [
       ...prevMessages,
       { user: "", content: "Conexão estabelecida", type: "system" },
@@ -100,6 +145,7 @@ export function Chat() {
         ])
       }
     })
+    /*
 
     return () => {
       newSocket.close()
@@ -135,10 +181,22 @@ export function Chat() {
     return origin
   }
 
+  const usersConnectedFake1 = ["francisco"]
+  const usersConnectedFake2 = ["nadine"]
+
   return (
     <div className="chat">
+      <audio
+        autoplay
+        controls="controls"
+        style={{ position: "absolute", right: 10, top: 5 }}
+      >
+        <source src={audioSrc} type="audio/mp3" />
+      </audio>
       <Sidebar
-        usersConnected={usersConnected}
+        usersConnected={
+          user.username === "nadine" ? usersConnectedFake1 : usersConnectedFake2
+        }
         isOpen={sidebarIsOpen}
         handleLogout={handleLogout}
         handleClose={() => setSidebarIsOpen(false)}
@@ -155,7 +213,7 @@ export function Chat() {
       <section className="chat__messages">
         <div className="chat__messages__area" ref={chatAreaRef}>
           <div className="chat__messages__area__header">
-            <p>Divirta-se conversando com seus amigos</p>
+            <p>Aqui foi onde tudo começou...</p>
             <div />
           </div>
           {messages.map((message, index) => (
@@ -163,10 +221,22 @@ export function Chat() {
               key={index}
               userName={message.user}
               message={message.content}
+              src={message.user === "nadine" ? nadineAvatar : francisAvatar}
               type={message.type ?? null}
               origin={defineMessageOrigin(message)}
             />
           ))}
+          {loadingMyMessage && (
+            <p className="my-message__loading">
+              {user.username} está digitando...
+            </p>
+          )}
+          {loadingOtherMessage && (
+            <p className="other-message__loading">
+              {user.username === "nadine" ? "francisco" : "nadine"} está
+              digitando...
+            </p>
+          )}
         </div>
         <Input
           type="text"

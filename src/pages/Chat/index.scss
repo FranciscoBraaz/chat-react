@@ -76,6 +76,14 @@
   }
 }
 
+.my-message__loading {
+  align-self: flex-end;
+}
+
+.other-message__loading {
+  align-self: flex-start;
+}
+
 @media (min-width: 960px) {
   .chat {
     flex-direction: row;

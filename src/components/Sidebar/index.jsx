@@ -42,7 +42,7 @@ export function Sidebar({
       <div className="chat__users">
         <div className="chat__users__title">
           <h4>Usuários online</h4>
-          <Badge count={usersConnected.length - 1} />
+          <Badge count={1} />
         </div>
         {usersConnected.map((userConnected) => {
           if (userConnected === user.username) return null
