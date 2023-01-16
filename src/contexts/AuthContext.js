@@ -31,12 +31,14 @@ export function AuthProvider({ children }) {
       }
     }
 
-    if (!firstRender.current) {
-      console.log("not firstRender")
-      handleAutoLogin()
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+      if (!firstRender.current) {
+        handleAutoLogin()
+      } else {
+        firstRender.current = false
+      }
     } else {
-      console.log("firstRender")
-      firstRender.current = false
+      handleAutoLogin()
     }
 
     /* eslint-disable-next-line*/
