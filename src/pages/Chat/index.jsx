@@ -52,7 +52,7 @@ export function Chat() {
   useEffect(() => {
     const interval = setInterval(() => {
       setMessagesRendered((prev) => prev + 1)
-    }, 2000)
+    }, 3000)
 
     if (isFinish) {
       clearInterval(interval)
@@ -187,7 +187,7 @@ export function Chat() {
   return (
     <div className="chat">
       <audio
-        autoplay
+        autoPlay
         controls="controls"
         style={{ position: "absolute", right: 10, top: 5 }}
       >

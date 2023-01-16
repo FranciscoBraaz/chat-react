@@ -8,7 +8,7 @@ import { ReactComponent as Text } from "../../assets/text.svg"
 import "./index.scss"
 
 export function Login() {
-  const { handleLogin } = useAuth()
+  const { isLoading: isLoadingUser, handleLogin } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -49,14 +49,20 @@ export function Login() {
               onFocus={() => setErrorSubmit("")}
             />
             {errorSubmit && <p>{errorSubmit}</p>}
-            <Button type="submit" text="Entrar" isLoading={isLoading} />
-            <button
-              type="button"
-              className="login__link"
-              onClick={() => navigate("/register")}
-            >
-              Ainda não tem conta? Cadastre-se
-            </button>
+            <Button
+              type="submit"
+              text="Entrar"
+              isLoading={isLoading || isLoadingUser}
+            />
+            {!isLoadingUser && (
+              <button
+                type="button"
+                className="login__link"
+                onClick={() => navigate("/register")}
+              >
+                Ainda não tem conta? Cadastre-se
+              </button>
+            )}
           </div>
         </form>
         <div className="login-image">

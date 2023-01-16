@@ -8,13 +8,12 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [accessToken, setAccessToken] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const { refresh } = useRefreshToken()
   const firstRender = useRef(true)
 
   useEffect(() => {
     async function handleAutoLogin() {
-      setIsLoading(true)
       try {
         const { data } = await refresh()
         if (data) {

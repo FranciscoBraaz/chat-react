@@ -5,9 +5,7 @@ import { Login } from "../pages/Login"
 import { Register } from "../pages/Register"
 
 export default function AppRoutes() {
-  const { isAuthenticated, loading } = useAuth()
-
-  if (loading) return null
+  const { isAuthenticated } = useAuth()
 
   if (!isAuthenticated) {
     return (
