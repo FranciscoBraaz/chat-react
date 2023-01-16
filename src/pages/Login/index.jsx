@@ -54,15 +54,19 @@ export function Login() {
               text="Entrar"
               isLoading={isLoading || isLoadingUser}
             />
-            {!isLoadingUser && (
-              <button
-                type="button"
-                className="login__link"
-                onClick={() => navigate("/register")}
-              >
-                Ainda não tem conta? Cadastre-se
-              </button>
-            )}
+            <button
+              type="button"
+              className="login__link"
+              onClick={() => navigate("/register")}
+              disabled={isLoadingUser}
+              style={
+                isLoadingUser
+                  ? { pointerEvents: "none", cursor: "default" }
+                  : {}
+              }
+            >
+              Ainda não tem conta? Cadastre-se
+            </button>
           </div>
         </form>
         <div className="login-image">

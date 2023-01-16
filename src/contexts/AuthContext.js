@@ -13,8 +13,11 @@ export function AuthProvider({ children }) {
   const firstRender = useRef(true)
 
   useEffect(() => {
+    console.log("useEffect")
     async function handleAutoLogin() {
+      console.log("AutoLogin")
       try {
+        console.log("AutoLogin Try")
         const { data } = await refresh()
         if (data) {
           setAccessToken(data.accessToken)
@@ -29,8 +32,10 @@ export function AuthProvider({ children }) {
     }
 
     if (!firstRender.current) {
+      console.log("not firstRender")
       handleAutoLogin()
     } else {
+      console.log("firstRender")
       firstRender.current = false
     }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import socketIO from "socket.io-client"
 import { AlignJustify } from "react-feather"
 
@@ -23,7 +23,6 @@ export function Chat() {
 
   const [message, setMessage] = useState("")
   const [socket, setSocket] = useState(null)
-  const [usersConnected, setUsersConnected] = useState([])
   const [messages, setMessages] = useState([])
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false)
   const [previousScrollHeight, setPreviousScrollHeight] = useState(0)
@@ -59,6 +58,8 @@ export function Chat() {
     }
 
     return () => clearInterval(interval)
+
+    /* eslint-disable-next-line */
   }, [])
 
   useEffect(() => {
@@ -82,6 +83,8 @@ export function Chat() {
     if (messagesRendered > messagesPredefine.length) {
       setIsFinish(true)
     }
+
+    /* eslint-disable-next-line */
   }, [messagesRendered])
 
   useEffect(() => {
@@ -145,14 +148,14 @@ export function Chat() {
         ])
       }
     })
-    /*
+    */
 
     return () => {
       newSocket.close()
       setMessages([])
     }
 
-    /* eslint-disable-next-line*/
+    /* eslint-disable-next-line */
   }, [])
 
   function handleSendMessage() {
