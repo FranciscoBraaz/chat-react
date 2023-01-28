@@ -8,13 +8,12 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [accessToken, setAccessToken] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const { refresh } = useRefreshToken()
   const firstRender = useRef(true)
 
   useEffect(() => {
     async function handleAutoLogin() {
-      setIsLoading(true)
       try {
         const { data } = await refresh()
         if (data) {
@@ -25,14 +24,20 @@ export function AuthProvider({ children }) {
       } catch (error) {
         console.log("Error")
       } finally {
-        setIsLoading(false)
+        setTimeout(() => {
+          setIsLoading(false)
+        }, 3000)
       }
     }
 
-    if (!firstRender.current) {
-      handleAutoLogin()
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+      if (!firstRender.current) {
+        handleAutoLogin()
+      } else {
+        firstRender.current = false
+      }
     } else {
-      firstRender.current = false
+      handleAutoLogin()
     }
 
     /* eslint-disable-next-line*/
