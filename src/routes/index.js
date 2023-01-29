@@ -7,8 +7,8 @@ import { Register } from "../pages/Register"
 
 export default function AppRoutes() {
   const { isAuthenticated, isLoading } = useAuth()
+
   if (isLoading) {
-    console.log("IS", isLoading)
     return (
       <Routes>
         <Route path="/" element={<LoadingPage />} />

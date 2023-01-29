@@ -37,7 +37,7 @@
 .chat__messages__area {
   padding: 24px 12px;
   height: 100%;
-  max-height: calc(100vh - 132px);
+  max-height: calc(100vh - 192px);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -64,6 +64,7 @@
   width: 100%;
   align-items: center;
   gap: 8px;
+  padding: 16px 12px;
 
   & > p {
     color: #96989d;
@@ -90,6 +91,6 @@
   }
 
   .chat__messages__area {
-    max-height: calc(100vh - 68px);
+    max-height: calc(100vh - 128px);
   }
 }

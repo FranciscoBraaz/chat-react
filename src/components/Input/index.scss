@@ -17,6 +17,19 @@
   & > svg {
     color: #b4beca;
   }
+
+  &--disabled {
+    opacity: 0.5;
+
+    & > div {
+      pointer-events: none;
+      cursor: default;
+    }
+
+    & input {
+      pointer-events: none;
+    }
+  }
 }
 
 .input {

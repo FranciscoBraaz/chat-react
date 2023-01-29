@@ -105,6 +105,7 @@ export function AuthProvider({ children }) {
         isAuthenticated,
         accessToken,
         isLoading,
+        setUser,
         setAccessToken,
         setIsAuthenticated,
         handleLogin,

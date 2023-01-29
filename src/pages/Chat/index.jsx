@@ -14,7 +14,14 @@ import "./index.scss"
 
 export function Chat() {
   const { refresh } = useRefreshToken()
-  const { user, accessToken, setAccessToken, handleLogout } = useAuth()
+  const {
+    user,
+    accessToken,
+    setAccessToken,
+    setUser,
+    setIsAuthenticated,
+    handleLogout,
+  } = useAuth()
 
   const [message, setMessage] = useState("")
   const [socket, setSocket] = useState(null)
@@ -22,6 +29,9 @@ export function Chat() {
   const [messages, setMessages] = useState([])
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false)
   const [previousScrollHeight, setPreviousScrollHeight] = useState(0)
+  const [connectionLost, setConnectionLost] = useState(false)
+  const [usersSearched, setUsersSearched] = useState([])
+  const [searchIsEmpty, setSearchIsEmpty] = useState(true)
 
   const chatAreaRef = useRef()
 
@@ -42,7 +52,7 @@ export function Chat() {
 
   useEffect(() => {
     const newSocket = socketIO.connect("http://localhost:2000", {
-      reconnection: false,
+      reconnectionAttempts: 10,
       auth: {
         token: `Bearer ${accessToken}`,
       },
@@ -53,16 +63,21 @@ export function Chat() {
         const { data } = await refresh()
         if (data) {
           setAccessToken(data.accessToken)
+        } else {
+          setAccessToken("")
+          setUser(null)
+          setIsAuthenticated(false)
         }
       }
-      console.log("Error", err.message)
     })
-    setSocket(newSocket)
 
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { user: "", content: "Conexão estabelecida", type: "system" },
-    ])
+    newSocket.on("disconnect", () => {
+      setConnectionLost(true)
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { user: "", content: "Você foi desconectado", type: "system" },
+      ])
+    })
 
     newSocket.on("user-list", (userList) => {
       if (userList?.length > 0) {
@@ -101,6 +116,16 @@ export function Chat() {
       }
     })
 
+    newSocket.on("connect", () => {
+      setConnectionLost(false)
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { user: "", content: "Conexão estabelecida", type: "system" },
+      ])
+    })
+
+    setSocket(newSocket)
+
     return () => {
       newSocket.close()
       setMessages([])
@@ -121,6 +146,21 @@ export function Chat() {
     }
   }
 
+  function handleSearch(keyword) {
+    if (!keyword) {
+      setUsersSearched([])
+      setSearchIsEmpty(true)
+      return
+    }
+
+    const searchedUsers = usersConnected.filter((userConnected) =>
+      userConnected.includes(keyword),
+    )
+
+    setUsersSearched(searchedUsers)
+    setSearchIsEmpty(false)
+  }
+
   function defineMessageOrigin(message) {
     let origin = ""
 
@@ -138,10 +178,11 @@ export function Chat() {
   return (
     <div className="chat">
       <Sidebar
-        usersConnected={usersConnected}
+        usersConnected={searchIsEmpty ? usersConnected : usersSearched}
         isOpen={sidebarIsOpen}
         handleLogout={handleLogout}
         handleClose={() => setSidebarIsOpen(false)}
+        handleSearch={handleSearch}
       />
       <header className="chat__header">
         <button onClick={() => setSidebarIsOpen(true)}>
@@ -153,11 +194,11 @@ export function Chat() {
         />
       </header>
       <section className="chat__messages">
+        <div className="chat__messages__area__header">
+          <p>Divirta-se conversando com seus amigos</p>
+          <div />
+        </div>
         <div className="chat__messages__area" ref={chatAreaRef}>
-          <div className="chat__messages__area__header">
-            <p>Divirta-se conversando com seus amigos</p>
-            <div />
-          </div>
           {messages.map((message, index) => (
             <Message
               key={index}
@@ -179,6 +220,7 @@ export function Chat() {
           rightIcon="Send"
           iconBackground="#157cff"
           sizeIcon={18}
+          disabled={connectionLost}
         />
       </section>
     </div>

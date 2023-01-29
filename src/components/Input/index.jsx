@@ -17,9 +17,12 @@ export function Input({
   onChange,
   onPressEnter,
   onFocus,
+  disabled = false,
   handleClick,
 }) {
   function handleKeyDown(target, key) {
+    if (disabled) return
+
     if (key === "Enter") {
       onPressEnter(target.value)
     }
@@ -29,6 +32,7 @@ export function Input({
     let className = "wrapper-input"
 
     if (withShadow) className += " wrapper-input--shadow"
+    if (disabled) className += " wrapper-input--disabled"
 
     return className
   }
@@ -40,7 +44,7 @@ export function Input({
         <div
           className="wrapper-input__icon-container"
           style={{ backgroundColor: iconBackground }}
-          onClick={handleClick}
+          onClick={!disabled ? handleClick : undefined}
         >
           <Icon size={sizeIcon} style={{ cursor: "pointer" }} />
         </div>
