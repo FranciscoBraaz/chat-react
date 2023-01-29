@@ -51,7 +51,7 @@ export function Chat() {
   }, [messages])
 
   useEffect(() => {
-    const newSocket = socketIO.connect("http://localhost:2000", {
+    const newSocket = socketIO.connect(`${process.env.REACT_APP_BASE_URL}`, {
       reconnectionAttempts: 10,
       auth: {
         token: `Bearer ${accessToken}`,
